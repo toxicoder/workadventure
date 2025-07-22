@@ -13,8 +13,9 @@ These instructions will get you a demo of the application up and running in minu
 1. Clone this repository
 2. Run `cp .env.template .env`
 3. Set `DEMO_MODE=true` in the `.env` file
-4. Run `docker-compose up`
-5. Add the following to your `/etc/hosts` file:
+4. If you are using a local registry for npm packages, create a `.npmrc` file in the root of the project and add the following line: `@workadventure:registry=http://localhost:4873/`
+5. Run `docker-compose up`
+6. Add the following to your `/etc/hosts` file:
 ```
 127.0.0.1 oidc.workadventure.localhost redis.workadventure.localhost play.workadventure.localhost traefik.workadventure.localhost matrix.workadventure.localhost extra.workadventure.localhost icon.workadventure.localhost map-storage.workadventure.localhost uploader.workadventure.localhost maps.workadventure.localhost api.workadventure.localhost front.workadventure.localhost
 ```
