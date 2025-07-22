@@ -2,22 +2,24 @@ import { GoogleChat } from '../src/Services/GoogleChat/GoogleChat';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 
-jest.mock('googleapis', () => {
+import { vi } from 'vitest';
+
+vi.mock('googleapis', () => {
     const mockChat = {
         spaces: {
             messages: {
-                create: jest.fn(),
+                create: vi.fn(),
             },
-            create: jest.fn(),
+            create: vi.fn(),
             members: {
-                create: jest.fn(),
-                delete: jest.fn(),
+                create: vi.fn(),
+                delete: vi.fn(),
             },
         },
     };
     return {
         google: {
-            chat: jest.fn(() => mockChat),
+            chat: vi.fn(() => mockChat),
         },
     };
 });

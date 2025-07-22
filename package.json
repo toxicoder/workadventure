@@ -4,7 +4,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "husky": "^7.0.1",
-    "vitest": "^1.4.0"
+    "vitest": "^3.2.4"
   },
   "scripts": {
     "prepare": "husky install || echo 'Husky not found. Maybe you are installing only a subproject.'"
@@ -19,6 +19,9 @@
     "play/packages/iframe-api-typings"
   ],
   "dependencies": {
-    "googleapis": "^153.0.0"
+    "axios": "1.10.0",
+    "bigbluebutton-js": "0.2.0",
+    "googleapis": "^153.0.0",
+    "svelte": "5.36.13"
   }
 }

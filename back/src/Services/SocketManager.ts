@@ -78,6 +78,7 @@ import { getMapStorageClient } from "./MapStorageClient";
 import { emitError } from "./MessageHelpers";
 import { cpuTracker } from "./CpuTracker";
 import { GoogleChat } from "./GoogleChat/GoogleChat";
+import { GoogleMeet } from "./GoogleMeet/GoogleMeet";
 import { getOAuth2Client } from "./GoogleOAuthService";
 
 const debug = Debug("socketmanager");
