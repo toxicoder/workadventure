@@ -3,7 +3,7 @@
     import { calendarEventsStore } from "../../Stores/CalendarStore";
     import ButtonClose from "../Input/ButtonClose.svelte";
     import LL from "../../../i18n/i18n-svelte";
-    import { createEvent } from "../../api/google-calendar";
+    import { createEvent } from "../../Api/google-calendar";
     import type { CalendarEventInterface } from "@workadventure/shared-utils";
 
     export let close: () => void;
