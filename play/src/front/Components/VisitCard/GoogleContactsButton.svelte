@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { getContacts } from "../../api/google-contacts";
+    import { getContacts } from "../../Api/google-contacts";
 
     const dispatch = createEventDispatcher();
 
