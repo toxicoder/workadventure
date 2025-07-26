@@ -132,7 +132,16 @@ export class ProximityChatRoom implements ChatRoom {
             });
     }
 
-    sendMessage(message: string, action: ChatMessageType = "proximity", broadcast = true, threadId?: string): void {
+    sendMessage(message: string, threadId?: string): void {
+        this.sendProximityMessage(message, "proximity", true, threadId);
+    }
+
+    sendProximityMessage(
+        message: string,
+        action: ChatMessageType = "proximity",
+        broadcast = true,
+        threadId?: string
+    ): void {
         // Create content message
         const newChatMessageContent = {
             body: message,
@@ -181,7 +190,7 @@ export class ProximityChatRoom implements ChatRoom {
     }
 
     private addIncomingUser(spaceUser: SpaceUserExtended): void {
-        this.sendMessage(get(LL).chat.timeLine.incoming({ userName: spaceUser.name }), "incoming", false);
+        this.sendProximityMessage(get(LL).chat.timeLine.incoming({ userName: spaceUser.name }), "incoming", false);
         /*const newChatUser = mapExtendedSpaceUserToChatUser(spaceUser);
 
         //if (userUuid === this._userUuid) return;
@@ -193,7 +202,7 @@ export class ProximityChatRoom implements ChatRoom {
     }
 
     private addOutcomingUser(spaceUser: SpaceUserExtended): void {
-        this.sendMessage(get(LL).chat.timeLine.outcoming({ userName: spaceUser.name }), "outcoming", false);
+        this.sendProximityMessage(get(LL).chat.timeLine.outcoming({ userName: spaceUser.name }), "outcoming", false);
         this.removeTypingUserbyID(spaceUser.spaceUserId.toString());
 
         /*this._connection.connectedUsers.update((users) => {
@@ -450,13 +459,17 @@ export class ProximityChatRoom implements ChatRoom {
 
         if (this.users) {
             if (this.users.size > 2) {
-                this.sendMessage(get(LL).chat.timeLine.youLeft(), "outcoming", false);
+                this.sendProximityMessage(get(LL).chat.timeLine.youLeft(), "outcoming", false);
             } else {
                 for (const user of this.users.values()) {
                     if (user.spaceUserId === this._spaceUserId) {
                         continue;
                     }
-                    this.sendMessage(get(LL).chat.timeLine.outcoming({ userName: user.name }), "outcoming", false);
+                    this.sendProximityMessage(
+                        get(LL).chat.timeLine.outcoming({ userName: user.name }),
+                        "outcoming",
+                        false
+                    );
                 }
             }
             this.typingMembers.set([]);
