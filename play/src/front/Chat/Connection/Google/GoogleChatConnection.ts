@@ -1,28 +1,72 @@
-import { Readable, Writable, writable } from "svelte/store";
+import { Readable, writable } from "svelte/store";
 import {
     ChatConnectionInterface,
     ChatRoom,
+    ChatRoomMember,
+    ChatRoomMembership,
+    ChatRoomMembershipManagement,
     ChatUser,
     ConnectionStatus,
     CreateRoomOptions,
     RoomFolder,
 } from "../ChatConnection";
-
 import axios from "axios";
-import { Readable, Writable, writable } from "svelte/store";
-import {
-    ChatConnectionInterface,
-    ChatRoom,
-    ChatUser,
-    ConnectionStatus,
-    CreateRoomOptions,
-    RoomFolder,
-} from "../ChatConnection";
+
+class GoogleChatRoom implements ChatRoom, ChatRoomMembershipManagement {
+    constructor(
+        public readonly id: string,
+        public readonly name: Readable<string>,
+        public readonly type: "direct" | "multiple",
+        public readonly hasUnreadMessages: Readable<boolean>,
+        public readonly avatarUrl: string | undefined,
+        public readonly messages: Readable<readonly never[]>,
+        public readonly isEncrypted: Readable<boolean>,
+        public readonly typingMembers: Readable<never[]>,
+        public readonly isRoomFolder: boolean,
+        public readonly lastMessageTimestamp: number,
+        public readonly myMembership: Readable<ChatRoomMembership>,
+        public readonly members: Readable<ChatRoomMember[]>,
+    ) {}
+
+    sendMessage(message: string, threadId?: string): void {
+        // Implement sending a message if necessary
+    }
+
+    sendFiles(files: FileList): Promise<void> {
+        return Promise.resolve();
+    }
+
+    setTimelineAsRead(): void {
+        // Implement setting timeline as read if necessary
+    }
+
+    hasPreviousMessage: Readable<boolean> = writable(false);
+
+    loadMorePreviousMessages(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    startTyping(): Promise<object> {
+        return Promise.resolve({});
+    }
+
+    stopTyping(): Promise<object> {
+        return Promise.resolve({});
+    }
+
+    joinRoom(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    leaveRoom(): Promise<void> {
+        return Promise.resolve();
+    }
+}
 
 export class GoogleChatConnection implements ChatConnectionInterface {
     connectionStatus: Readable<ConnectionStatus> = writable("ONLINE");
-    directRooms: Readable<ChatRoom[]> = writable([]);
-    rooms: Readable<(ChatRoom)[]> = writable([]);
+    directRooms: Readable<(ChatRoom & ChatRoomMembershipManagement)[]> = writable([]);
+    rooms: Readable<(ChatRoom & ChatRoomMembershipManagement)[]> = writable([]);
     invitations: Readable<ChatRoom[]> = writable([]);
     folders: Readable<RoomFolder[]> = writable([]);
     roomCreationInProgress: Readable<boolean> = writable(false);
@@ -46,12 +90,27 @@ export class GoogleChatConnection implements ChatConnectionInterface {
         return response.data;
     }
 
-    async createDirectRoom(userChatId: string): Promise<ChatRoom> {
+    async createDirectRoom(userChatId: string): Promise<ChatRoom & ChatRoomMembershipManagement> {
         const response = await axios.post<ChatRoom>("/api/google-chat/direct-messages", { userChatId });
-        return response.data;
+        // Assuming the response is a standard ChatRoom, we wrap it in GoogleChatRoom
+        const roomData = response.data;
+        return new GoogleChatRoom(
+            roomData.id,
+            writable(roomData.name),
+            roomData.type,
+            writable(roomData.hasUnreadMessages),
+            roomData.avatarUrl,
+            writable([]), // messages
+            writable(false), // isEncrypted
+            writable([]), // typingMembers
+            false, // isRoomFolder
+            Date.now(), // lastMessageTimestamp
+            writable("join"), // myMembership
+            writable([]) // members
+        );
     }
 
-    getDirectRoomFor(userChatId: string): ChatRoom | undefined {
+    getDirectRoomFor(userChatId: string): (ChatRoom & ChatRoomMembershipManagement) | undefined {
         // This should be implemented by searching through the existing direct rooms
         return undefined;
     }
