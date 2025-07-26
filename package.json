@@ -7,7 +7,8 @@
     "vitest": "^3.2.4"
   },
   "scripts": {
-    "prepare": "husky install || echo 'Husky not found. Maybe you are installing only a subproject.'"
+    "prepare": "husky install || echo 'Husky not found. Maybe you are installing only a subproject.'",
+    "proto-all": "cd messages && npm run proto-all"
   },
   "workspaces": [
     "play",
